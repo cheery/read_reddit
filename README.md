@@ -49,5 +49,12 @@ While fetching the posts, it's doing some filtering to check
 the quality of the posts. For now it's only checking against
 blacklisted domains.
 
-I'll eventually try some metrics for qualifying the posts.
-Even the simple stuff such as this helps though.
+To add some filtering, this thing dumps the post titles into
+`uncategorized.list`. From there you can dump them into `spam.list`
+`worthless.list`, `interesting.list`, `important.list`.
+
+The files are fed to a naive bayes classifier, and it will color
+the titles depending on the classification result.
+
+When I will no longer get false positives, I will hide the spam titles
+entirely.

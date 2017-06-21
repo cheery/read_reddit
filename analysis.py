@@ -6,7 +6,9 @@ import re
 # the web, but I'll first try to deduce stuff just from the
 # titles.
 
-# 
+# They propose that the accuracy of the classifier could be
+# better if we calculated the score in log-space. In log
+# space log(a * b) = log(a) + log(b)
 
 # Some of this code was grabbed from the 'antispam' python module.
 TOKENS_RE = re.compile(r"\$?\d*(?:[.,]\d+)+|\w+-\w+|\w+", re.U)
@@ -26,8 +28,18 @@ def model_from_lists(sources):
     return model
 
 def get_word_list(message):
-    return filter(lambda s: len(s) > 2,
+    word_list = filter(lambda s: len(s) > 2,
         TOKENS_RE.findall(message.lower()))
+    # Increases the processing time, but should also help the classifier.
+    # This means we are also looking at word transitions rather than plain
+    # words when doing the decision.
+    duples = []
+    for i in range(len(word_list) - 1):
+        duples.append((word_list[i], word_list[i+1]))
+    triples = []
+    for i in range(len(word_list) - 2):
+        triples.append((word_list[i], word_list[i+1], word_list[i+2]))
+    return word_list + duples + triples
 
 def train(model, message, category):
     token_table, total_count = model
