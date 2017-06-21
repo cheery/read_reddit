@@ -1,0 +1,40 @@
+# Read Reddit (and Hacker News)
+
+I check Reddit more often than it updates, therefore I end
+up seeing the same titles over and over again (yeah, it's
+a really bad addiction). When 90% of these links are noise,
+my day is ruined.
+
+I'm taking steps towards mitigating the negative
+effects of reading Reddit:
+
+ * I need to setup a stream, such that I see only each post
+   once.
+ * I'm not against the South-Asian-African-Arabian
+   livelihood or lifestyle, but I really do not give a shit
+   about the ad-funded web turdlettes these guys shovel into
+   every subreddit at constant rate. Asian web turdlettes are
+   a bit too stale and brown for my taste even if I was
+   otherwise interested about reddit & new posts. 
+
+## What's wrong with programming subreddits as-it?
+
+ * Elm, Go, Haskell, Kotlin, Rust, Swift, Typescript, fanposts.
+ * Java "this thing isn't crap" or "who cares about verbosity?" fanposts.
+ * JuLIaR (or something like that) promotion spam (lol).
+ * Dynamic vs. static anything debates. (protip: Anti-dynamic sucks)
+ * Tabs vs. spaces debates. (protip: Tabs suck)
+ * People posting their stuff to wrong subreddit.
+
+## Why read reddit at all?
+
+Sometimes there are golden nuggets in between that I cannot
+really afford to miss. There are the funny things like the
+TempleOS and the cool things such as the demofox.org
+blogposts. 
+
+I also read hacker news, but it's going to require much
+stronger filtering. They have the problem of self-importance,
+negativity and alarmed tone in the posts. I think over the
+short while a simple domain filtering will help on that, but
+I need to come up with something better eventually.
