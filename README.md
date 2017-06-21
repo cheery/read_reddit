@@ -38,3 +38,16 @@ stronger filtering. They have the problem of self-importance,
 negativity and alarmed tone in the posts. I think over the
 short while a simple domain filtering will help on that, but
 I need to come up with something better eventually.
+
+## What does this script do?
+
+This thing fetches stuff from Reddit and Hacker News
+bundles at a time. After printing them it puts a bookmark
+that tells where to continue from the next time.
+
+While fetching the posts, it's doing some filtering to check
+the quality of the posts. For now it's only checking against
+blacklisted domains.
+
+I'll eventually try some metrics for qualifying the posts.
+Even the simple stuff such as this helps though.
