@@ -1,0 +1,6 @@
+{
+    "comment": "For retrieving client_id, client_secret, read: https://github.com/reddit/reddit/wiki/OAuth2-Quick-Start-Example#first-steps",
+    "client_id": "", 
+    "client_secret": "", 
+    "my_subreddits": "programminglanguages+programming+vulkan+gamedev"
+}
