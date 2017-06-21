@@ -39,7 +39,7 @@ all_submissions = []
 print "Fetching reddit posts"
 new_before = None
 if 'before' not in config:
-    for submission in mreddit.subreddit(my_subreddits).new(filter=1):
+    for submission in reddit.subreddit(my_subreddits).new(limit=1):
         old_before = submission.fullname
 else:
     old_before = config['before']
