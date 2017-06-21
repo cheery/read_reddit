@@ -78,7 +78,7 @@ config['hn_before'] = new_before
 
 all_submissions.sort(key = lambda x: x[0])
 
-title_fd = open('uncategorized.list', 'wa')
+title_fd = open('uncategorized.list', 'a')
 
 for tstamp, which, submission in all_submissions:
     print '-' * 80
