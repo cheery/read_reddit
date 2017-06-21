@@ -2,6 +2,12 @@ from datetime import datetime
 from hackernews import HackerNews
 from urlparse import urlparse
 import praw, json
+import analysis
+
+print "Retrieving spam database"
+model = analysis.model_from_lists([
+    'spam.list', 'worthless.list',
+    'interesting.list', 'important.list'])
 
 config_path = 'config.json'
 
@@ -22,7 +28,9 @@ blacklist = set([
     'codementor.io',        # blind leading deaf -websites
     'codewithoutrules.com', # stuff I am not interested about
     'orlandohamsho.com',
-    'widgetsandshit.com'
+    'widgetsandshit.com',
+    'clubhouse.io',
+    'froala.com'
 ])
 
 all_submissions = []
@@ -70,18 +78,38 @@ config['hn_before'] = new_before
 
 all_submissions.sort(key = lambda x: x[0])
 
+title_fd = open('uncategorized.list', 'wa')
+
 for tstamp, which, submission in all_submissions:
     print '-' * 80
+    if analysis.is_spam(model, submission.title):
+        color = '30'
+    else:
+        color = '90'
+        if analysis.is_interesting(model, submission.title):
+            color = '0'
+        if analysis.is_important(model, submission.title):
+            color = '80'
     if which == "reddit":
         if submission.url:
             print submission.url
-        print u"\033[92m{}\033[0m [{}] {}".format(submission.subreddit, submission.score, submission.title)
+        print u"\033[92m{}\033[0m \033[{}m[{}] {}\033[0m".format(submission.subreddit, color, submission.score, submission.title)
+        print u" ".join(
+            "%.2f" % analysis.score(model, submission.title, i)
+            for i in range(4))
+        title_fd.write(submission.title.encode('utf-8') + "\n")
     elif which == "hn":
         if submission.url:
             print submission.url
-        print u"hacker news [{}] {}".format(submission.score, submission.title)
+        print u"hacker news \033[{}m[{}] {}\033[0m".format(color, submission.score, submission.title)
+        print u" ".join(
+            "%.2f" % analysis.score(model, submission.title, i)
+            for i in range(4))
+        title_fd.write(submission.title.encode('utf-8') + "\n")
     else:
         print submission
+
+title_fd.close()
 
 with open('config.json', 'w') as fd:
     json.dump(config, fd, indent=4, sort_keys=True)
