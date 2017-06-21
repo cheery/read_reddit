@@ -1,8 +1,9 @@
 from datetime import datetime
-from hackernews import HackerNews
+from hackernews import HackerNews, Item, HTTPError, InvalidItemID
 from urlparse import urlparse
 import praw, json
 import analysis
+import requests
 
 print "Retrieving spam database"
 model = analysis.model_from_lists([
@@ -56,11 +57,22 @@ if new_before == None:
     new_before = old_before
 config['before'] = new_before
 
+def read_new_stories(count):
+    with requests.Session() as s:
+        for story_id in hn.new_stories(count):
+            response = s.get('{0}{1}/{2}.json'.format(hn.base_url, 'item', story_id))
+            if response.status_code != requests.codes.ok:
+                raise HTTPError
+            response = response.json()
+            if not response:
+                raise InvalidItemID
+            yield story_id, Item(response)
+
 print "Fetching hacker news posts"
 new_before = hn.get_max_item()
 old_before = config.get('hn_before', new_before)
 if new_before > old_before:
-    for story_id in hn.new_stories(new_before - old_before):
+    for story_id, story in read_new_stories(new_before - old_before):
         if story_id > new_before:
             new_before = story_id
         if story_id <= old_before:
