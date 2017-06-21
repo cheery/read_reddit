@@ -38,20 +38,31 @@ all_submissions = []
 
 print "Fetching reddit posts"
 new_before = None
-if 'before' not in config:
+if 'before' not in config or not isinstance(config['before'], list): # The last condition should cause an upgrade.
     for submission in reddit.subreddit(my_subreddits).new(limit=1):
-        old_before = submission.fullname
+        old_before = submission.fullname, submission.created_utc
 else:
     old_before = config['before']
-
-    for submission in reddit.subreddit(my_subreddits).new(
-            params={'before':old_before}):
-        if new_before is None:
-            new_before = submission.fullname
-        if submission.domain in blacklist:
-            continue
-        submission_time = datetime.fromtimestamp(submission.created_utc)
-        all_submissions.append((submission_time, 'reddit', submission))
+    done = False
+    params = {}
+    # This turned out to be a bit harder than I thought. 
+    # The old post could be deleted or out of range. This means that we need to
+    # scan the page until we either locate that, or a post with an older timestamp.
+    while not done:
+        for submission in reddit.subreddit(my_subreddits).new(limit=1000, params=params):
+            params['after'] = submission.fullname
+            if new_before is None:
+                new_before = submission.fullname, submission.created_utc
+            if submission.fullname == old_before[0]:
+                done = True
+                break
+            if submission.created_utc <= old_before[1]:
+                done = True
+                break
+            if submission.domain in blacklist:
+                continue
+            submission_time = datetime.fromtimestamp(submission.created_utc)
+            all_submissions.append((submission_time, 'reddit', submission))
 
 if new_before == None:
     new_before = old_before
