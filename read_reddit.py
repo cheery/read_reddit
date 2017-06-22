@@ -79,16 +79,15 @@ def read_new_stories(count):
                 raise InvalidItemID
             yield story_id, Item(response)
 
-print "Fetching hacker news posts"
 new_before = hn.get_max_item()
 old_before = config.get('hn_before', new_before)
+print "Fetching hacker news posts", new_before - old_before
 if new_before > old_before:
     for story_id, story in read_new_stories(new_before - old_before):
         if story_id > new_before:
             new_before = story_id
         if story_id <= old_before:
             continue
-        story = hn.get_item(story_id)
         if story.deleted:
             continue
         if story.url != None:
