@@ -1,6 +1,6 @@
 import re
 from operator import mul
-from math import log, e
+from math import log, exp
 
 # A naive Bayes classifier.
 # The information available for the classifier to do the
@@ -59,8 +59,8 @@ def train(model, message, category):
 def score(model, message, category=CATEGORY_SPAM):
     token_table, total_count = model
     hashes = get_word_list(message)
-    ratings = []
-    i_ratings = []
+    ratings = 0.0
+    #i_ratings = []
     for h in hashes:
         rating = INIT_RATING
         if h in token_table:
@@ -78,18 +78,22 @@ def score(model, message, category=CATEGORY_SPAM):
                 rating = spam_prob / (ham_prob + spam_prob)
                 if rating < 0.01:
                     rating = 0.01
-        ratings.append(rating)
-        i_ratings.append(1.0 - rating)
-    if len(ratings) == 0:
-        return 0
-    if len(ratings) > 20:
-        ratings.sort()
-        ratings = ratings[:10] + ratings[-10:]
-        i_ratings.sort()
-        i_ratings = i_ratings[:10] + i_ratings[-10:]
-    product = reduce(mul, ratings)
-    i_product = reduce(mul, i_ratings)
-    return product / (product + i_product)
+        ratings += log(1.0 - rating) - log(rating)
+        #ratings.append(log(1.0 - rating) - log(rating))
+        # i_ratings.append(1.0 - rating)
+    return 1.0 / (1.0 + exp(ratings))
+
+    #if len(ratings) == 0:
+    #    return 0
+
+    #if len(ratings) > 20:
+    #    ratings.sort()
+    #    ratings = ratings[:10] + ratings[-10:]
+    #    i_ratings.sort()
+    #    i_ratings = i_ratings[:10] + i_ratings[-10:]
+    #product = reduce(mul, ratings)
+    #i_product = reduce(mul, i_ratings)
+    #return product / (product + i_product)
 
 def is_spam(model, message):
     return score(model, message, CATEGORY_SPAM) > 0.9
