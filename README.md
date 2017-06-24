@@ -21,7 +21,7 @@ effects of reading Reddit:
 
  * Elm, Go, Haskell, Kotlin, Rust, Swift, Typescript, fanposts.
  * Java "this thing isn't crap" or "who cares about verbosity?" fanposts.
- * JuLIaR (or something like that) promotion spam (lol).
+ * Self-promotion spam (lol).
  * Dynamic vs. static anything debates. (protip: Anti-dynamic sucks)
  * Tabs vs. spaces debates. (protip: Tabs suck)
  * People posting their stuff to wrong subreddit.
@@ -59,5 +59,7 @@ the titles depending on the classification result.
 When I will no longer get false positives, I will hide the spam titles
 entirely.
 
-Note: On 'categories' you need at least 4 categories. This is due to
-how the lists are treated for now, and it may be relaxed later.
+Note: There's a feature that lets you create your own
+categories now. On 'categories' you need at least 4
+categories. This is due to how the lists are treated for
+now, and it may be relaxed later.
