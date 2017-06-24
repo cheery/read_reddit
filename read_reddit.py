@@ -24,16 +24,6 @@ hn = HackerNews()
 
 my_subreddits = config['my_subreddits']
 
-# The list of sites that are shites.
-blacklist = set([
-    'codementor.io',        # blind leading deaf -websites
-    'codewithoutrules.com', # stuff I am not interested about
-    'orlandohamsho.com',
-    'widgetsandshit.com',
-    'clubhouse.io',
-    'froala.com'
-])
-
 all_submissions = []
 
 print "Fetching reddit posts"
@@ -59,8 +49,6 @@ else:
             if submission.created_utc <= old_before[1]:
                 done = True
                 break
-            if submission.domain in blacklist:
-                continue
             submission_time = datetime.fromtimestamp(submission.created_utc)
             all_submissions.append((submission_time, 'reddit', submission))
 
