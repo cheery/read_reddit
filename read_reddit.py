@@ -5,15 +5,15 @@ import praw, json
 import analysis
 import requests
 
-print "Retrieving spam database"
-model = analysis.model_from_lists([
-    'spam.list', 'worthless.list',
-    'interesting.list', 'important.list'])
-
 config_path = 'config.json'
 
 with open('config.json', 'r') as fd:
     config = json.load(fd)
+
+print "Retrieving spam database"
+model = analysis.model_from_lists(config.get('categories', [
+    'spam.list', 'worthless.list',
+    'interesting.list', 'important.list']))
 
 reddit = praw.Reddit(
     client_id=config['client_id'],
@@ -118,7 +118,7 @@ for tstamp, which, submission in all_submissions:
         print u"\033[92m{}\033[0m \033[{}m[{}] {}\033[0m".format(submission.subreddit, color, submission.score, submission.title)
         print u" ".join(
             "%.2f" % analysis.score(model, submission.title, i)
-            for i in range(4))
+            for i in range(len(model[1])))
         title_fd.write(submission.title.encode('utf-8') + "\n")
     elif which == "hn":
         if submission.url:
@@ -126,7 +126,7 @@ for tstamp, which, submission in all_submissions:
         print u"hacker news \033[{}m[{}] {}\033[0m".format(color, submission.score, submission.title)
         print u" ".join(
             "%.2f" % analysis.score(model, submission.title, i)
-            for i in range(4))
+            for i in range(len(model[1])))
         title_fd.write(submission.title.encode('utf-8') + "\n")
     else:
         print submission

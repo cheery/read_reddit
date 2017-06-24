@@ -58,3 +58,6 @@ the titles depending on the classification result.
 
 When I will no longer get false positives, I will hide the spam titles
 entirely.
+
+Note: On 'categories' you need at least 4 categories. This is due to
+how the lists are treated for now, and it may be relaxed later.

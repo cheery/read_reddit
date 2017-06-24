@@ -1,16 +1,50 @@
-import re
+import re, sys, json
 from operator import mul
 from math import log, exp
+
+# If you like to write blogs, you may want to see if your own title
+# passes through your own spam filter.
+def main():
+    config_path = 'config.json'
+
+    with open('config.json', 'r') as fd:
+        config = json.load(fd)
+
+    title = " ".join(sys.argv[1:])
+    model = model_from_lists(config.get('categories', [
+        'spam.list', 'worthless.list',
+        'interesting.list', 'important.list']))
+    print u" ".join(
+        "%.2f" % score(model, title, i)
+        for i in range(len(model[1])))
+
+# This utility you have to import. It can be used to find
+# out similar titles and find out the ones that are in the
+# wrong category.
+def list_out(path_to_list, category, limit=0.5):
+    config_path = 'config.json'
+
+    with open('config.json', 'r') as fd:
+        config = json.load(fd)
+
+    title = " ".join(sys.argv[1:])
+    model = model_from_lists(config.get('categories', [
+        'spam.list', 'worthless.list',
+        'interesting.list', 'important.list']))
+
+    with open(path_to_list) as fd:
+        for message in fd.read().split('\n'):
+            if score(model, message, category) >= limit:
+                print message
+                print u" ".join(
+                    "%.2f" % score(model, title, i)
+                    for i in range(len(model[1])))
 
 # A naive Bayes classifier.
 # The information available for the classifier to do the
 # decision is very narrow. It could be expanded by crawling
 # the web, but I'll first try to deduce stuff just from the
 # titles.
-
-# They propose that the accuracy of the classifier could be
-# better if we calculated the score in log-space. In log
-# space log(a * b) = log(a) + log(b)
 
 # Some of this code was grabbed from the 'antispam' python module.
 TOKENS_RE = re.compile(r"\$?\d*(?:[.,]\d+)+|\w+-\w+|\w+", re.U)
@@ -22,7 +56,7 @@ CATEGORY_INTERESTING = 2
 CATEGORY_IMPORTANT   = 3
 
 def model_from_lists(sources):
-    model = {}, [0, 0, 0, 0]
+    model = {}, [0 for name in sources]
     for category, filename in enumerate(sources):
         with open(filename) as fd:
             for message in fd.read().split('\n'):
@@ -51,7 +85,7 @@ def train(model, message, category):
     total_count[category] += 1
     for word in get_word_list(message):
         if word not in token_table:
-            token_table[word] = token = [0, 0, 0, 0]
+            token_table[word] = token = [0 for i in total_count]
         else:
             token = token_table[word]
         token[category] += 1
@@ -106,3 +140,6 @@ def is_interesting(model, message):
 
 def is_important(model, message):
     return score(model, message, CATEGORY_IMPORTANT) > 0.5
+
+if __name__=='__main__':
+    main()
