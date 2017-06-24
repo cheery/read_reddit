@@ -78,10 +78,8 @@ if new_before > old_before:
             continue
         if story.deleted:
             continue
-        if story.url != None:
-            domain = urlparse(story.url).netloc
-            if domain in blacklist:
-                continue
+        #if story.url != None:
+        #    domain = urlparse(story.url).netloc
         submission_time = story.submission_time
         all_submissions.append((submission_time, 'hn', story))
 config['hn_before'] = new_before
