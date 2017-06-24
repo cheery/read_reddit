@@ -108,10 +108,13 @@ for tstamp, which, submission in all_submissions:
         color = '30'
     else:
         color = '90'
-        if analysis.is_interesting(model, submission.title):
-            color = '0'
         if analysis.is_important(model, submission.title):
             color = '80'
+        elif analysis.is_interesting(model, submission.title):
+            color = '0'
+        elif all(analysis.score(model, submission.title, i) < 0.5 for i in range(len(model[1]))):
+            color = '33' # If this happens, it means that we haven't seen this before
+                         # it may be worthwhile to observe and add into appropriate category.
     if which == "reddit":
         if submission.url:
             print submission.url
