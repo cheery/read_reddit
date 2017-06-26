@@ -63,3 +63,7 @@ Note: There's a feature that lets you create your own
 categories now. On 'categories' you need at least 4
 categories. This is due to how the lists are treated for
 now, and it may be relaxed later.
+
+Note: From now on, the stuff on the spam.list is immediately
+ignored and written into "spam_candinates.list". From there you
+can read them and move the appropriate ones into actual spam.

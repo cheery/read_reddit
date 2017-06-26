@@ -87,11 +87,14 @@ config['hn_before'] = new_before
 all_submissions.sort(key = lambda x: x[0])
 
 title_fd = open('uncategorized.list', 'a')
+spam_candi_fd = open('spam_candinates.list', 'a')
 
 for tstamp, which, submission in all_submissions:
     print '-' * 80
     if analysis.is_spam(model, submission.title):
         color = '30'
+        spam_candi_fd.write(submission.title.encode('utf-8') + "\n")
+        continue # Ignoring spam from now on.
     else:
         color = '90'
         if analysis.is_important(model, submission.title):
