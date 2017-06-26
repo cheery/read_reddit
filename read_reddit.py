@@ -124,6 +124,7 @@ for tstamp, which, submission in all_submissions:
         print submission
 
 title_fd.close()
+spam_candi_fd.close()
 
 with open('config.json', 'w') as fd:
     json.dump(config, fd, indent=4, sort_keys=True)
